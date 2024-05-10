@@ -22,4 +22,10 @@ define('DIR_UPLOAD', '/home/photofam/test.photofamily.bg/system/storage/upload/'
 define('DIR_CATALOG', '/home/photofam/test.photofamily.bg/catalog/');
 
 // DB
-
+define('DB_DRIVER', 'mysqli');
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'photofam_radko');
+define('DB_PASSWORD', 'R@dko123');
+define('DB_DATABASE', 'photofam_adelina_handmade');
+define('DB_PORT', '3306');
+define('DB_PREFIX', 'oc_');

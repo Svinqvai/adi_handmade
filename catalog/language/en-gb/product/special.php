@@ -21,4 +21,6 @@ $_['text_rating_asc']   = 'Rating (Lowest)';
 $_['text_rating_desc']  = 'Rating (Highest)';
 $_['text_model_asc']    = 'Model (A - Z)';
 $_['text_model_desc']   = 'Model (Z - A)';
+$_['text_quantity_asc']   = 'Quantity (Low > High)';
+$_['text_quantity_desc']  = 'Quantity (High > Low)';
 $_['text_limit']        = 'Show:';

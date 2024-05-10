@@ -7,16 +7,16 @@ class ControllerProductSpecial extends Controller {
 
 		$this->load->model('tool/image');
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
+		if (isset($this->request->get['quantity'])) {
+			$sort = $this->request->get['quantity'];
 		} else {
-			$sort = 'p.sort_order';
+			$sort = 'p.quantity';
 		}
 
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 
 		if (isset($this->request->get['page'])) {

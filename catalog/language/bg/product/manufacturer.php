@@ -32,4 +32,6 @@ $_['text_rating_asc']   = 'Рейтинг (възх.)';
 $_['text_rating_desc']  = 'Рейтинг (низх.)';
 $_['text_model_asc']    = 'Модел (възх.)';
 $_['text_model_desc']   = 'Модел (низх.)';
+$_['text_quantity_asc']   = 'Наличност (възх.)';
+$_['text_quantity_desc']  = 'Наличност (низх.)'
 $_['text_limit']        = 'Покажи:';

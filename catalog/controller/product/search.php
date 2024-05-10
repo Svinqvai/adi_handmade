@@ -41,16 +41,22 @@ class ControllerProductSearch extends Controller {
 			$sub_category = '';
 		}
 
-		if (isset($this->request->get['sort'])) {
-			$sort = $this->request->get['sort'];
+		// if (isset($this->request->get['sort'])) {
+		// 	$sort = $this->request->get['sort'];
+		// } else {
+		// 	$sort = 'p.sort_order';
+		// }
+		
+		if (isset($this->request->get['quantity'])) {
+			$sort = $this->request->get['quantity'];
 		} else {
-			$sort = 'p.sort_order';
+			$sort = 'p.quantity';
 		}
 
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'ASC';
+			$order = 'DESC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -286,11 +292,11 @@ class ControllerProductSearch extends Controller {
 
 			$data['sorts'] = array();
 
-			$data['sorts'][] = array(
-				'text'  => $this->language->get('text_default'),
-				'value' => 'p.sort_order-ASC',
-				'href'  => $this->url->link('product/search', 'sort=p.sort_order&order=ASC' . $url)
-			);
+			// $data['sorts'][] = array(
+			// 	'text'  => $this->language->get('text_default'),
+			// 	'value' => 'p.sort_order-ASC',
+			// 	'href'  => $this->url->link('product/search', 'sort=p.sort_order&order=ASC' . $url)
+			// );
 
 			$data['sorts'][] = array(
 				'text'  => $this->language->get('text_name_asc'),
@@ -330,16 +336,28 @@ class ControllerProductSearch extends Controller {
 				);
 			}
 
+			// $data['sorts'][] = array(
+			// 	'text'  => $this->language->get('text_model_asc'),
+			// 	'value' => 'p.model-ASC',
+			// 	'href'  => $this->url->link('product/search', 'sort=p.model&order=ASC' . $url)
+			// );
+
+			// $data['sorts'][] = array(
+			// 	'text'  => $this->language->get('text_model_desc'),
+			// 	'value' => 'p.model-DESC',
+			// 	'href'  => $this->url->link('product/search', 'sort=p.model&order=DESC' . $url)
+			// );
+
 			$data['sorts'][] = array(
-				'text'  => $this->language->get('text_model_asc'),
-				'value' => 'p.model-ASC',
-				'href'  => $this->url->link('product/search', 'sort=p.model&order=ASC' . $url)
+				'text'  => $this->language->get('text_quantity_asc'),
+				'value' => 'p.quantity-ASC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.quantity&order=ASC' . $url)
 			);
 
 			$data['sorts'][] = array(
-				'text'  => $this->language->get('text_model_desc'),
-				'value' => 'p.model-DESC',
-				'href'  => $this->url->link('product/search', 'sort=p.model&order=DESC' . $url)
+				'text'  => $this->language->get('text_quantity_desc'),
+				'value' => 'p.quantity-DESC',
+				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.quantity&order=DESC' . $url)
 			);
 
 			$url = '';
