@@ -1,0 +1,54 @@
+2024-04-27 9:21:32 - MOD: Modification Default
+
+FILE: system/engine/action.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 41
+
+FILE: system/engine/loader.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 49
+LINE: 108
+LINE: 120
+LINE: 165
+
+FILE: system/library/config.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 23
+
+FILE: system/library/language.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 38
+LINE: 40
+LINE: 49
+LINE: 51
+LINE: 60
+LINE: 62
+
+FILE: system/library/template/php.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 18
+
+FILE: system/library/template/tiwg.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 24
+----------------------------------------------------------------
+MOD: Change Price With Product Options
+
+FILE: catalog/view/theme/default/template/product/product.tpl
+CODE: <h2><?php echo $price; ?></h2>
+LINE: 140
+CODE: style="text-decoration: line-through;"
+LINE: 145
+CODE: <?php echo $special; ?>
+LINE: 149
+CODE: <li><?php echo $text_tax; ?>
+LINE: 155
+CODE: <li><?php echo $discount['quantity']; ?>
+LINE: 167
+CODE: <?php echo $footer; ?>
+LINE: 709
+
+FILE: catalog/controller/product/product.php
+CODE: public function getRecurringDescription()
+LINE: 752
+----------------------------------------------------------------
