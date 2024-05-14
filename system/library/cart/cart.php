@@ -268,6 +268,7 @@ class Cart {
 					'width'           => $product_query->row['width'],
 					'height'          => $product_query->row['height'],
 					'length_class_id' => $product_query->row['length_class_id'],
+					'stock_status_id' => $product_query->row['stock_status_id'],
 					'recurring'       => $recurring
 				);
 			} else {
@@ -386,11 +387,13 @@ class Cart {
 
 	public function hasStock() {
 		foreach ($this->getProducts() as $product) {
+			if( $product['stock_status_id'] == 6){
+				return true;
+			}
 			if (!$product['stock']) {
 				return false;
 			}
 		}
-
 		return true;
 	}
 
