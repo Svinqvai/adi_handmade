@@ -496,9 +496,9 @@ footer h5 {
 	color: #ffffff;
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 	background-color: #363636;
-	background-image: linear-gradient(to bottom, #444444, #222222);
+	background-image: linear-gradient(to bottom, #f5b6da, #ef4fa6);
 	background-repeat: repeat-x;
-	border-color: #222222 #222222 #000000;
+	/* border-color: #222222 #222222 #000000; */
 }
 .btn-inverse:hover, .btn-inverse:active, .btn-inverse.active, .btn-inverse.disabled, .btn-inverse[disabled] {
 	background-color: #222222;
@@ -756,3 +756,7 @@ h2.price {
     background-image: none;
     background-color: #df5c39;
 }
+
+  .fa-3x{
+	font-size:3em !important;
+};

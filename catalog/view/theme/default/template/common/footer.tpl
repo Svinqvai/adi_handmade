@@ -15,16 +15,13 @@
         <h5><?php echo $text_service; ?></h5>
         <ul class="list-unstyled">
           <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
-          <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
           <li><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>
         </ul>
       </div>
       <div class="col-sm-3">
         <h5><?php echo $text_extra; ?></h5>
         <ul class="list-unstyled">
-          <li><a href="<?php echo $manufacturer; ?>"><?php echo $text_manufacturer; ?></a></li>
           <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
-          <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
           <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li>
         </ul>
       </div>
@@ -40,11 +37,12 @@
     </div>
     <hr>
   <!--  <p><?php echo $powered; ?></p> -->
-      <div class="col-sm-3 social">
-        <a href="https://www.facebook.com/handmadealbumsadelina" target="_blank"><span class="fb-icon"></span></a>
-        <a href="https://www.instagram.com" target="_blank"><span class="i-icon"></span></a>
-        <a href="https://www.youtube.com" target="_blank"><span class="ytb-icon"></span></a>
-      </div>
+    <ul class="stay-connected-inner list-inline">
+      <li><a href="https://www.facebook.com/handmadealbumsadelina"><i class="fa fa-facebook fa-3x" aria-hidden="true"></i></a></li>
+      <li><a href="https://www.instagram.com"><i class="fa fa-instagram fa-3x" aria-hidden="true"></i></a></li>
+      <li><a href="https://www.pinterest.com"><i class="fa fa-pinterest fa-3x" aria-hidden="true"></i></a></li>
+      <li><a href="https://www.youtube.com"><i class="fa fa-youtube fa-3x" aria-hidden="true"></i></a></li>
+    </ul>
 </footer>
 
 
