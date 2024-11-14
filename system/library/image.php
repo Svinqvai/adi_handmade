@@ -7,6 +7,30 @@ class Image {
 	private $bits;
 	private $mime;
 
+	private function rotatePortrait() {
+        $exif = exif_read_data($this->file);
+
+        if (is_array($exif) && array_key_exists('Orientation', $exif) && !empty($exif['Orientation'])) {
+            switch ($exif['Orientation']) {
+                case 8:
+                    $this->image = imagerotate($this->image, 90, 0);
+                    $tmpWidth = $this->width;
+                    $this->width = $this->height;
+                    $this->height = $tmpWidth;
+                    break;
+                case 3:
+                    $this->image = imagerotate($this->image, 180, 0);
+                    break;
+                case 6:
+                    $this->image = imagerotate($this->image, -90, 0);
+                    $tmpWidth = $this->width;
+                    $this->width = $this->height;
+                    $this->height = $tmpWidth;
+                    break;
+            }
+        }
+    }
+
 	public function __construct($file) {
 		if (file_exists($file)) {
 			$this->file = $file;
@@ -24,6 +48,7 @@ class Image {
 				$this->image = imagecreatefrompng($file);
 			} elseif ($this->mime == 'image/jpeg') {
 				$this->image = imagecreatefromjpeg($file);
+				$this->rotatePortrait();
 			}
 		} else {
 			exit('Error: Could not load image ' . $file . '!');
