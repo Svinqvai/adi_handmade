@@ -4785,7 +4785,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   color: var(--text-color);
   text-decoration: none;
   background-color: #fff;
-  border: 1px solid #fc0324;
+  border: 1px solid #050505;
 }
 .pagination > li:first-child > a,
 .pagination > li:first-child > span {
@@ -4803,7 +4803,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > li > a:focus,
 .pagination > li > span:focus {
   z-index: 3;
-  color: var(--border-color);
+  color: #23527c;
   background-color: #eee;
   border-color: #ddd;
 }
@@ -5055,6 +5055,8 @@ a.badge:focus {
   }
 }
 .thumbnail {
+  width: 510px;
+  height: 510px;
   display: block;
   padding: 4px;
   margin-bottom: 20px;
@@ -5065,6 +5067,7 @@ a.badge:focus {
   -webkit-transition: border .2s ease-in-out;
        -o-transition: border .2s ease-in-out;
           transition: border .2s ease-in-out;
+
 }
 .thumbnail > img,
 .thumbnail a > img {

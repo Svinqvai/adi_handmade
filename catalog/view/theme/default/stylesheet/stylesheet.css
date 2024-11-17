@@ -548,6 +548,7 @@ footer h5 {
 	opacity: 0.8;
 }
 .product-thumb .image img {
+	margin-top: 5px;
 	margin-left: auto;
 	margin-right: auto;
 }
