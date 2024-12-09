@@ -159,7 +159,7 @@ class Cart {
 								'weight'                  => '',
 								'weight_prefix'           => ''
 							);
-							if($option_query->row['type'] == 'text'){
+							if($option_query->row['type'] == 'text' && $option_query->row['name'] === 'Име на бебето'){
 								$inputLength = mb_strlen($value, 'UTF-8');	
 								if ($inputLength >= 6 && $inputLength <= 7) {
 									$option_price += 1;
