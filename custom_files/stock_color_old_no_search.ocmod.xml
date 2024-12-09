@@ -1,0 +1,98 @@
+<modification>
+    <name>Stock Status Color by iSenseLabs</name>
+    <version>1.1</version>
+    <link>https://isenselabs.com</link>
+    <author>iSenseLabs</author>
+    <code>isenselabs_stock_status_color_3</code>
+
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[$data['stock'] = $product_info['stock_status'];]]></search>
+            <add  position="after"><![CDATA[if($data['stock'] == 'Out Of Stock' || $data['stock'] == 'Изчерпано') {
+                    $data['stock_color'] = "#8b0707";
+                } elseif ($data['stock'] == 'Pre-Order' || $data['stock'] == 'По поръчка') {
+                    $data['stock_color'] = "#ff9900";
+                }  elseif ($data['stock'] == 'Available Soon' || $data['stock'] == 'Очаква се скоро') {
+                    $data['stock_color'] = "#fb5323";
+                } elseif ($data['stock'] == 'In Stock' || $data['stock'] == 'Налично') {
+                    $data['stock_color'] = "#c5cc1d";
+                } else {
+                    $data['stock_color'] = "#ff0000";
+                }]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$data['stock'] = $product_info['quantity'];]]></search>
+            <add position="after"><![CDATA[$data['stock_color'] = "#66aa00";]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$data['stock'] = $this->language->get('text_instock');]]></search>
+            <add position="after"><![CDATA[$data['stock_color'] = "#66aa00";]]></add>
+        </operation>
+
+    </file>
+
+    <file path="catalog/view/theme/*/template/product/product.tpl">
+        <operation>
+            <search><![CDATA[<?php echo $stock; ?>]]></search>
+            <add position="replace"><![CDATA[<span style="font-weight:bold; color:<?php echo $stock_color ?>"><?php echo $stock; ?></span>]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[$this->load->language('product/category');]]></search>    
+            <add position="after"><![CDATA[
+                $this->load->language('product/product');
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$data['products'][] = array(]]></search>    
+            <add position="before"><![CDATA[
+            if ($result['quantity'] <= 0) {
+                $result['stock'] = $result['stock_status'];
+                if($result['stock'] == 'Out Of Stock' || $result['stock'] == 'Изчерпано') {
+                    $result['stock_color'] = "#8b0707";
+                } elseif ($result['stock'] == 'Pre-Order' || $result['stock'] == 'Очаква се скоро') {
+                    $result['stock_color'] = "#ff9900";
+                } elseif ($result['stock'] == 'Available Soon' || $result['stock'] == 'По поръчка') {
+                    $result['stock_color'] = "#fb5323";
+                } elseif ($result['stock'] == 'In Stock' || $result['stock'] == 'Налично') {
+                    $result['stock_color'] = "#c5cc1d";
+                } else {
+                    $result['stock_color'] = "#ff0000";
+                }
+
+            } elseif ($this->config->get('config_stock_display')) {
+                $result['stock'] = $result['quantity'];
+                $result['stock_color'] = "#66aa00";
+            } else {
+                $result['stock'] = $this->language->get('text_instock');
+                $result['stock_color'] = "#66aa00";
+            }
+            ]]></add>
+        </operation>
+
+        <operation>
+            <search><![CDATA[$data['products'][] = array(]]></search>
+            <add position="after"><![CDATA[
+                'quantity' => $result['quantity'],
+                'stock' => $result['stock'],
+                'stock_color' => $result['stock_color'],
+            ]]></add>
+        </operation>
+
+    </file>
+    <file path="catalog/view/theme/*/template/product/category.tpl">
+        <operation>
+            <search><![CDATA[<?php if ($product['rating']) { ?>]]></search>
+            <add position="before"><![CDATA[
+                <div class="stock-status">
+                    <span style="font-weight:bold;color:<?php echo $product['stock_color']; ?>"><?php if($product['stock'] >0){echo 'Налично';}else{ echo $product['stock']; }; ?></span>
+                </div>
+            ]]></add>
+        </operation>
+    </file>
+</modification>

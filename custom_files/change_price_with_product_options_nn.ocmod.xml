@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<name>Change Price With Product Options</name>
+	<version>1.0</version>
+	<code>ProductPriceOptions</code>
+	<author>ModulePoints</author>
+	<file path="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search><![CDATA[<h2><?php echo $price; ?></h2>]]></search>
+			<add position="replace"><![CDATA[
+				<h2><span class="mptnew-price"><?php echo $price; ?></span></h2>
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[style="text-decoration: line-through;"]]></search>
+			<add position="replace"><![CDATA[
+				style="text-decoration: line-through;" class="mptold-price"
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[<?php echo $special; ?>]]></search>
+			<add position="replace"><![CDATA[
+				<span class="mptnew-price"><?php echo $special; ?></span>
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[<li><?php echo $text_tax; ?>]]></search>
+			<add position="replace"><![CDATA[
+				<li class="mptex-tax"><?php echo $text_tax; ?>
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[<li><?php echo $discount['quantity']; ?>]]></search>
+			<add position="replace"><![CDATA[
+				<li class="mptold-discount removeable"><?php echo $discount['quantity']; ?>
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[<?php echo $footer; ?>]]></search>
+			<add position="before"><![CDATA[
+			
+<?php /* livePrice Starts */ ?>
+<script type="text/javascript"><!--
+function livePrice() {
+	$.ajax({
+		url: 'index.php?route=product/product/livePrice&product_id=<?php echo $product_id; ?>',
+		type: 'post',
+		data: $('#product select, #product input[type=\'radio\']:checked, #product input[type=\'checkbox\']:checked, #product input[type=\'text\']'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('.mptnew-price').parent().parent('li').removeClass('pulse');
+		},
+		success: function(json) {
+			// Pulse Effect
+			console.log(json['total_price']);
+			console.log(json['old_price']);
+			$('.mptnew-price').parent().parent('li').addClass('pulse');
+		
+			// Line-Through Price Creates.
+			if(json['old_price']) {
+				$('.mptold-price').html(json['old_price']);
+			}
+			
+			// Ex-Tax Price Creates.
+			if(json['ex_tax']) {
+				$('.mptex-tax').html('<?php echo $text_tax; ?> '+ json['ex_tax']);
+			}		
+			
+			// Mail New Price Creates.
+			if(json['total_price']) {
+				$('.mptnew-price').html(json['total_price']);
+			}
+			
+			// Discount Price Creates.
+			if (json['discounts'] && json['discounts'] != '') {
+				var html = '';
+				for (i = 0; i < json['discounts'].length; i++) {
+					html += '<li class="mptold-discount mycreate">'+ json['discounts'][i]['quantity'] +'<?php echo $text_discount; ?>'+ json['discounts'][i]['price'] +'</li>';
+				}
+				
+				$('ul li.mptold-discount').first().before(html);
+				
+				$('.mptold-discount').each(function(){
+					if(!$(this).hasClass('mycreate')) {
+						$(this).remove();
+					}
+				});
+				
+				$('.mptold-discount.mycreate').each(function(){
+					$(this).removeClass('mycreate');
+				});
+			}
+		}
+	});
+}
+
+$('#product').delegate('select, input[type=\'radio\'], input[type=\'checkbox\']', 'change', function() 
+{
+	livePrice();
+});
+
+$('#product').delegate('input[type=\'text\']', 'keyup', function() 
+{
+	livePrice(); 		
+});
+
+$(document).ready(function()
+{
+	$('.radio:first input[type="radio"]').prop('checked', true);
+	livePrice();
+});
+//--></script>
+<style>
+.pulse {
+-webkit-animation-name: pulse;
+animation-name: pulse;
+-webkit-animation-duration: 1s;
+animation-duration: 1s;
+-webkit-animation-fill-mode: both;
+animation-fill-mode: both;  
+animation-iteration-count: 4;
+-webkit-animation-iteration-count: 4;
+}
+@-webkit-keyframes pulse {
+0% {
+-webkit-transform: scale3d(1, 1, 1);
+transform: scale3d(1, 1, 1);
+}
+50% {
+-webkit-transform: scale3d(1.05, 1.05, 1.05);
+transform: scale3d(1.05, 1.05, 1.05);
+}
+100% {
+-webkit-transform: scale3d(1, 1, 1);
+transform: scale3d(1, 1, 1);
+}
+}
+@keyframes pulse {
+0% {
+-webkit-transform: scale3d(1, 1, 1);
+transform: scale3d(1, 1, 1);
+}
+50% {
+-webkit-transform: scale3d(1.05, 1.05, 1.05);
+transform: scale3d(1.05, 1.05, 1.05);
+}
+100% {
+-webkit-transform: scale3d(1, 1, 1);
+transform: scale3d(1, 1, 1);
+}
+}
+</style>
+<?php /* livePrice Ends */ ?>
+			]]></add>
+		</operation>
+	</file>	
+	<file path="catalog/controller/product/product.php">
+		<operation>
+		<search><![CDATA[public function getRecurringDescription()]]></search>
+			<add position="before"><![CDATA[
+	// livePrice Starts
+	public function livePrice() {
+		$this->language->load('product/product');
+		
+		$this->load->model('catalog/product');
+		
+		$json = array();
+		
+		if(isset($this->request->get['product_id'])) {
+			$product_id = $this->request->get['product_id'];
+		}else{
+			$product_id = 0;
+		}
+		
+		$product_info = $this->model_catalog_product->getProduct($product_id);		
+		if($product_info) {
+			if(!empty($this->request->post['quantity']) && (int)$this->request->post['quantity']) {
+				$quantity = $this->request->post['quantity'];
+			}else{
+				$quantity = ($product_info['minimum']) ? $product_info['minimum'] : 1;
+			}	
+			
+			$price = $product_info['price'];
+			$special = $product_info['special'];
+			$option_price = 0;
+			
+			if(isset($this->request->post['option'])) {
+				foreach ($this->request->post['option'] as $product_option_id => $value) {
+				// My Code Start
+					$first_value = reset($this->request->post['option']);
+                    $inputLength = mb_strlen($first_value, 'UTF-8'); 
+				//	$json['еее'] = $inputLength;
+                    if ($inputLength >= 6 && $inputLength <= 7) {
+                        $option_price = 1;
+                    } elseif ($inputLength >= 8 && $inputLength <= 9) {
+                        $option_price = 2;
+                    } elseif ($inputLength >= 10) {
+                        $option_price = 3;
+                    }
+				//		My Code End	
+					$option_query = $this->db->query("SELECT po.product_option_id, po.option_id, od.name, o.type FROM " . DB_PREFIX . "product_option po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.option_id = o.option_id) LEFT JOIN " . DB_PREFIX . "option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_info['product_id'] . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+					if ($option_query->num_rows) {
+						if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'radio' || $option_query->row['type'] == 'image') {
+							$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.price, pov.price_prefix FROM " . DB_PREFIX . "product_option_value pov LEFT JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$value . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+							if ($option_value_query->num_rows) {
+								if ($option_value_query->row['price_prefix'] == '+') {
+									$option_price += $option_value_query->row['price'];
+								} elseif ($option_value_query->row['price_prefix'] == '-') {
+									$option_price -= $option_value_query->row['price'];
+								}
+							}
+						} elseif ($option_query->row['type'] == 'checkbox' && is_array($value)) {
+							foreach ($value as $product_option_value_id) {
+								$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM " . DB_PREFIX . "product_option_value pov LEFT JOIN " . DB_PREFIX . "option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+								if ($option_value_query->num_rows) {
+									if ($option_value_query->row['price_prefix'] == '+') {
+										$option_price += $option_value_query->row['price'];
+									} elseif ($option_value_query->row['price_prefix'] == '-') {
+										$option_price -= $option_value_query->row['price'];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		
+			if($special) {
+				$total_price = ($special + $option_price);
+			}else{
+				$total_price = ($price + $option_price);
+			}
+			
+			// Line-Through Price Creates.
+			if($special) {
+				if( VERSION >= '2.2.0.0') {
+					$json['old_price'] = $this->currency->format($this->tax->calculate(($price + $option_price), $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity, $this->session->data['currency']);
+				}else{
+					$json['old_price'] = $this->currency->format($this->tax->calculate(($price + $option_price), $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity);
+				}
+			}
+			
+			// Ex-Tax Price Creates.
+			if ($this->config->get('config_tax')) {
+				if( VERSION >= '2.2.0.0') {
+					$json['ex_tax'] = $this->currency->format($total_price * $quantity, $this->session->data['currency']);
+				}else{
+					$json['ex_tax'] = $this->currency->format($total_price * $quantity);
+				}
+			}
+			
+			// Mail New Price Creates.
+			if( VERSION >= '2.2.0.0') {
+				$json['total_price'] = $this->currency->format($this->tax->calculate($total_price, $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity, $this->session->data['currency']);
+			}else{
+				$json['total_price'] = $this->currency->format($this->tax->calculate($total_price, $product_info['tax_class_id'], $this->config->get('config_tax')) * $quantity);
+			}
+			
+			// Discount Price Creates.
+			$discounts = $this->model_catalog_product->getProductDiscounts($product_id);
+			if($discounts) {
+				$json['discounts'] = array();
+				foreach ($discounts as $discount) {
+					if( VERSION >= '2.2.0.0') {
+						$disc_price = $this->currency->format($this->tax->calculate($discount['price'] + $option_price, $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+					} else{
+						$disc_price = $this->currency->format($this->tax->calculate($discount['price'] + $option_price, $product_info['tax_class_id'], $this->config->get('config_tax')));
+					}
+					
+					$json['discounts'][] = array(
+						'quantity' => $discount['quantity'],
+						'price'    => $disc_price,
+					);
+				}
+			}
+		}
+		
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+	// livePrice Ends
+			]]></add>
+		</operation>
+	</file>	
+</modification>
