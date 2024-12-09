@@ -351,13 +351,13 @@ class ControllerProductSearch extends Controller {
 			$data['sorts'][] = array(
 				'text'  => $this->language->get('text_quantity_asc'),
 				'value' => 'p.quantity-ASC',
-				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.quantity&order=ASC' . $url)
+				'href'  => $this->url->link('product/search', '&sort=p.quantity&order=ASC' . $url)
 			);
 
 			$data['sorts'][] = array(
 				'text'  => $this->language->get('text_quantity_desc'),
 				'value' => 'p.quantity-DESC',
-				'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '&sort=p.quantity&order=DESC' . $url)
+				'href'  => $this->url->link('product/search', '&sort=p.quantity&order=DESC' . $url)
 			);
 
 			$url = '';
